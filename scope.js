@@ -34,7 +34,7 @@ function baz(foo) {
   bam = "yay"; // (global scope) unless 'use strict' is on (then its an error).
 };
 
-/* POST Session Notes
+/* Notes
 
 Position (relatove to =):
   - The left hand side of "=" is called the "Target".
@@ -54,6 +54,8 @@ Lexical Scope:
 
 // Examples
 
+// ==========
+
 var foo = "bar"; // (global scope)
 
 function bar() { // (global scope)
@@ -68,5 +70,37 @@ function bar() { // (global scope)
 bar();
 
 foo; // "bar"
-bam; // Normal mode: "yay" / 'use strict' mode: error, undeclared
+bam; // Normal mode: "yay", 'use strict' mode: error, undeclared
 baz(); // "undefined" (reference error, global does not create a declared function for us)
+
+// ==========
+
+// Function Expression: Assigned to a larger expression syntax, typically a variable.
+// The bar identifier in this function expression is available within its own scope (A reference to its self).
+var foo = function bar() {
+  var foo = "baz";
+
+  // Function Declaration/Statement: Can not be nested in non-function blocks.
+  function baz(foo) {
+    foo = bar;
+    foo;
+  };
+  baz();
+};
+
+foo();
+bar();
+
+// ==========
+
+var foo;
+
+try {
+  foo.length;
+}
+// 'err' is block scoped to the catch clause its self.
+catch (err) {
+  console.log(err); // TypeError
+};
+
+console.log(err); // ReferenceError
