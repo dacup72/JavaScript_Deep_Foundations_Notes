@@ -1,13 +1,6 @@
 'use strict'
 
-/* === SCOPE === (Where to look for things)
-
-- Javascript is a compiled language (it can find syntax errors before run time).
-
-- Function scope (where functions are the unit of scope).
-*/
-
-// Function Scope
+// === SCOPE === (Where to look for things)
 
 // Formal variable declaration (global scope).
 var foo = "bar";
@@ -33,26 +26,6 @@ function baz(foo) {
   // If it reaches the global scope and still does not find it then the global scope declares a new global variable for bam on the global scope.
   bam = "yay"; // (global scope) unless 'use strict' is on (then its an error).
 };
-
-/* Notes
-
-Position (relatove to =):
-  - The left hand side of "=" is called the "Target".
-  - The right hand side of "=" is called the "Source".
-
-Declarations: 
-  - Declarations are only handled at compile time (not run time).
-
-Lexical Scope:
-  - Lexical scope is based on where variables and blocks of scope have been authored in the source code.  
-  - Lexical scopes are nested.
-
-'use strict': 
-  - Makes things errors that normally are not in javascript.
-  - Only runs on file where it is used.
-*/
-
-// Examples
 
 // ==========
 
@@ -104,3 +77,74 @@ catch (err) {
 };
 
 console.log(err); // ReferenceError
+
+// ==========
+
+// Function Scoping
+
+var foo = "foo";
+
+var foo = "foo2";
+console.log(foo); // 'foo2'
+
+console.log(foo); // 'foo2'
+
+// How to fix it with function scope:
+// The problem is that this polutes the global name space with 'bob'.
+
+var foo = "foo";
+
+function bob() {
+  var foo = "foo2";
+  console.log(foo); // 'foo2'
+};
+bob();
+
+console.log(foo); // 'foo'
+
+// How to fix poluting global name space with IIFE:
+
+var foo = "foo";
+
+// It is now a function expression because the word 'function' is no longer the first word.
+( function bob() {
+  var foo = "foo2";
+  console.log(foo); // 'foo2'
+} )();
+
+console.log(foo); // 'foo'
+
+// ==========
+
+/* Notes
+
+- Javascript is a compiled language (it can find syntax errors before run time).
+
+IIFE: 
+  - Immediatly Invoked Function Expression
+  - Creates scope without poluting the global name space.
+
+Function scope: 
+  - Where functions are the unit of scope.
+
+Position (relatove to =):
+  - The left hand side of "=" is called the "Target".
+  - The right hand side of "=" is called the "Source".
+
+Declarations: 
+  - Declarations are only handled at compile time (not run time).
+
+Lexical Scope:
+  - Scope is fixed at run time (Easier to optimize).
+  - Lexical scope is based on where variables and blocks of scope have been authored in the source code.  
+  - Lexical scopes are nested.
+
+Dynamic Scope:
+  - Scope can change at run time and is determined by where something is called from.
+
+'use strict': 
+  - Makes things errors that normally are not in javascript.
+  - Only runs on file where it is used.
+*/
+
+
