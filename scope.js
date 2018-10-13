@@ -107,18 +107,105 @@ console.log(foo); // 'foo'
 var foo = "foo";
 
 // It is now a function expression because the word 'function' is no longer the first word.
-( function bob() {
+(function bob() {
   var foo = "foo2";
   console.log(foo); // 'foo2'
-} )();
+})();
 
 console.log(foo); // 'foo'
+
+// ==========
+
+// Block Scoping
+
+function diff(x, y) {
+  if (x > y) {
+    var tmp = x; // Belongs to the diff scope because of 'var' declaration.
+    let tmp = x; // Belongs to the if statement's scope because of 'let' declaration (Creates block scope).
+    x = y;
+    y = tmp;
+  };
+
+  tmp; // Defined as 'x' with 'var' keyword / Reference error with 'let' keyword
+
+  return x - y;
+};
+
+// ==========
+
+function formaStr(str) {
+  // Creating an explicit block of scope.
+  {
+    let prefix, rest; // Let creates block scope for 'prefix' and 'rest' in the curly brackets it is inside of.
+    prefix = str.slice(0, 3);
+    rest = str.slice(3);
+    str = prefix.toUpperCase() + rest;
+  }
+
+  if (/^FOO:/.test(str)) {
+    return str;
+  }
+
+  return str.slice(4);
+};
+
+// ==========
+
+function repeat(fn, n) {
+  var result;
+
+  // Let is always prefered vs var as the declaration of 'i' in a for loop.
+  // Makes 'i' only available inside of the for loop.
+  for (let i = 0; i < n; i++) {
+    result = fn(result, i);
+  };
+};
+
+// ==========
+
+// Where 'var' is still very useful:
+
+function lookupRecord(searchStr) {
+  try {
+    var id = getRecord(searchStr);
+  }
+  catch (err) {
+    var id = -1;
+  };
+
+  return id; // Let would make id undeclared where as var makes it visible (Allows declaration to be close to where it is used).
+};
+
+// ==========
+
+// Const Declaration
+
+var a = 2;
+a++; // 3
+
+const b = 2;
+b++; // Error
+
+const c = [2];
+c[0]++; // 3 <-- oops!?
 
 // ==========
 
 /* Notes
 
 - Javascript is a compiled language (it can find syntax errors before run time).
+
+Let Declaration:
+  - The let keyword creates block scope (Like making an if statement have scope).
+  - Creates scope based on curly brackets, not function keywords.
+  - Let informs the reader of your code that you intend for block scoping so dont just replace all vars with let.
+  - Let keyword throws error if used twice to define some variable name in same scope.
+
+Const Declaration:
+  - A variable that can not be reassigned.
+  - Creates block scope the same way that 'let' does.
+  - Only use it with values that are already supposed to be immutable like the value of pie (3.14...).
+  - Const can be reassigned within its own block scope.
 
 IIFE: 
   - Immediatly Invoked Function Expression

@@ -19,5 +19,5 @@ var keyHandler = function keyHandler() {
 
 - You should always prefer a named function expression vs an anonymous function expression.
 
-- If the function has more than 3 lines of code then use a function declaration.
+- If the function has more than 3 lines of code then use a function declaration (Due to its hoisting behaviors).
 */
